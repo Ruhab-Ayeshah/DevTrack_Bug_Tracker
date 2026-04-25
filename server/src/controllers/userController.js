@@ -190,4 +190,40 @@ const deleteUser = async(req, res) => {
 
 };
 
-export {getAllUsers, getUserById, updateUser, deleteUser}
+
+const searchUsers = async (req, res) =>{
+    try{
+        
+        const {query} = req.query;
+
+        if(!query){
+            return res.status(400).json({
+                success: false,
+                message: "Search query is required",
+            });
+        }
+        
+        const result = await pool.query(
+            `SELECT user_id, username, email, role
+            FROM users
+            WHERE username ILIKE $1 OR email ILIKE $1
+            ORDER BY username ASC
+            LIMIT 10`,
+            [`%${query}%`]
+        );
+
+        res.status(200).json({
+            success: true,
+            data: result.rows
+        });
+
+    }catch(error){
+        console.log(error.message);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export {getAllUsers, getUserById, updateUser, deleteUser, searchUsers}
