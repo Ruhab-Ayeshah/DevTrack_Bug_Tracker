@@ -6,10 +6,11 @@ import cookieParser from 'cookie-parser';
 
 import authRoutes from "./routes/authRoutes.js";
 // import commentRoutes from "./routes/commentRoutes.js";
-// import issueRoutes from "./routes/issueRoutes.js";
+import issueRoutes from "./routes/issueRoutes.js";
 // import notificationRoutes from "./routes/notificationRoutes.js"
 import projectRoutes from "./routes/projectRoutes.js"
 import userRoutes from "./routes/userRoutes.js";
+
 
 dotenv.config();
 const app = express();
@@ -26,11 +27,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/issues', issueRoutes);
 
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(err.status).json({ 
+  res.status(err.status || 500).json({ 
     success: false, 
     message: err.message || 'Server error'});
 });

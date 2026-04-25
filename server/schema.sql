@@ -233,3 +233,20 @@ EXECUTE FUNCTION log_comment_created();
 
 
 
+--- I HAVE NOT ADDED THE TRIGGER BELOW YET BECAUSE I NEED TO UNDERSTAND IT
+CREATE OR REPLACE FUNCTION fn_label_update_issue()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    UPDATE issues SET last_updated = NOW() WHERE issue_id = OLD.issue_id;
+  ELSE
+    UPDATE issues SET last_updated = NOW() WHERE issue_id = NEW.issue_id;
+  END IF;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+ 
+CREATE TRIGGER trg_label_update_issue
+AFTER INSERT OR DELETE ON issue_labels
+FOR EACH ROW
+EXECUTE FUNCTION fn_label_update_issue();
