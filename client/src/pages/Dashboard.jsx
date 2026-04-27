@@ -7,13 +7,13 @@ import {
 } from 'lucide-react';
 
 const Dashboard = () => {
-  // Toggle this to 'Developer' or 'Manager' to see the sections disappear
+  // Toggle this to 'Developer' or 'Manager' to see different views
   const userRole = 'Admin'; 
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       
-      {/* 1. Dynamic Header */}
+      //1. Dynamic Header 
       <div className="flex justify-between items-center border-b border-[#d2f5fa]/10 pb-4">
         <div>
           <h2 className="text-xl font-bold text-[#78e5ef] tracking-tight flex items-center gap-2">
@@ -34,7 +34,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 2. Stats Grid */}
+      //2. Stats Grid 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {userRole === 'Admin' ? (
           <>
@@ -53,7 +53,7 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* 3. Main Data Content */}
+      //Main Data Content
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <div className="lg:col-span-2 space-y-6">
