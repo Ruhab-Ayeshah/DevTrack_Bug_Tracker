@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { 
   Terminal, Group, Activity, Bolt, 
   AlertCircle, Layout, CheckCircle, 
@@ -7,13 +9,19 @@ import {
 } from 'lucide-react';
 
 const Dashboard = () => {
-  // Toggle this to 'Developer' or 'Manager' to see different views
+  const { logout } = useAuth()
+  const navigate = useNavigate()
   const userRole = 'Admin'; 
+
+  function handleLogout() {
+    logout()
+    navigate('/signin')
+  }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       
-      //1. Dynamic Header 
+      {/* 1. Dynamic Header */}
       <div className="flex justify-between items-center border-b border-[#d2f5fa]/10 pb-4">
         <div>
           <h2 className="text-xl font-bold text-[#78e5ef] tracking-tight flex items-center gap-2">
@@ -24,17 +32,23 @@ const Dashboard = () => {
             {userRole === 'Admin' ? 'Admin Console v2.4.0' : 'Assigned Project Workspace'}
           </p>
         </div>
-        <div className="hidden md:flex relative">
+        <div className="hidden md:flex items-center gap-4 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78e5ef]/40" size={14} />
           <input 
             type="text" 
             placeholder={userRole === 'Admin' ? "Search system logs..." : "Search tasks..."}
             className="bg-[#042124] border border-[#78e5ef]/20 rounded-sm text-xs py-2 pl-9 pr-4 w-64 outline-none focus:border-[#78e5ef] transition-all"
           />
+          <button
+            onClick={handleLogout}
+            className="text-[10px] font-bold text-red-400 border border-red-400/30 px-3 py-2 hover:bg-red-400/10 transition-all uppercase tracking-widest"
+          >
+            Logout
+          </button>
         </div>
       </div>
 
-      //2. Stats Grid 
+      {/* 2. Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {userRole === 'Admin' ? (
           <>
@@ -53,17 +67,12 @@ const Dashboard = () => {
         )}
       </div>
 
-      //Main Data Content
+      {/* Main Data Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <div className="lg:col-span-2 space-y-6">
-          {/* Only Admins see User Management */}
           {userRole === 'Admin' && <UserManagementTable />}
-          
-          {/* Project Provisioning Form (Admin Only) */}
           {userRole === 'Admin' && <ProjectProvisioningForm />}
-
-          {/* Developers would see a Task List here instead */}
           {userRole !== 'Admin' && (
             <div className="bg-[#0a3338] border border-[#d2f5fa]/10 p-6">
               <h3 className="text-[#78e5ef] text-sm font-bold uppercase mb-4 tracking-widest">Assigned Issues</h3>
@@ -72,18 +81,14 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* 4. Side Widget Area */}
         <div className="space-y-6">
           <SystemEventsLog />
-          
         </div>
 
       </div>
     </div>
   );
 };
-
-// --- SUB-COMPONENTS  ---
 
 const StatCard = ({ label, value, icon, color, pulse, bar, trend }) => (
   <div className="bg-[#042124] border border-[#dfe3e4]/5 p-6 rounded-lg hover:border-[#78e5ef]/20 transition-all shadow-lg shadow-black/20">
@@ -123,7 +128,6 @@ const UserManagementTable = () => (
           </tr>
         </thead>
         <tbody className="text-xs divide-y divide-[#dfe3e4]/5">
-          {/* User Rows use bg-[#171c1d] and text-[#dfe3e4] */}
           <UserRow name="Sarah Miller" email="smiller@evtrack.io" role="Senior Dev" status="Active" roleColor="bg-[#253aa7]/30 text-[#bac3ff]" />
           <UserRow name="James Kovic" email="j.kovic@evtrack.io" role="QA Lead" status="Active" roleColor="bg-[#ffcd6d]/10 text-[#f0bf61]" />
         </tbody>
@@ -185,7 +189,6 @@ const SystemEventsLog = () => (
     </div>
   </div>
 );
-
 
 const ActivityItem = ({ text, time, color }) => (
   <div className="flex gap-3 text-xs">
